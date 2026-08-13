@@ -16,6 +16,13 @@ The goal of this project is to develop a machine learning system that predicts d
 
 ## Dataset
 
+The dataset used in this project contains disease-related and population information, including country, continent, population, date, cases, recoveries, deaths, and tests.
+
+The data was cleaned and preprocessed before being used for exploratory data analysis and machine learning model training.
+
+
+## Dataset
+
 The project uses a COVID-19 dataset containing information such as:
 
 - Country
