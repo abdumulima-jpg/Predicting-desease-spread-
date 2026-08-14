@@ -60,6 +60,8 @@ ml-project/
 │   └── feature_columns.pkl
 ├── notebooks/
 ├── outputs/
+│   └── plots/
+│       └── .gitkeep
 ├── src/
 │   ├── preprocess.py
 │   ├── feature_engineering.py
@@ -67,7 +69,7 @@ ml-project/
 │   ├── evaluate.py
 │   ├── predict.py
 │   └── utils.py
-├── frondend/
+├── frontend/
 │   └── index.html
 ├── main.py
 ├── config.py
