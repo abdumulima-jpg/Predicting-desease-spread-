@@ -2,115 +2,250 @@
 
 ## Project Overview
 
-This project uses machine learning to predict disease cases and support early warning of disease spread.
+**Predicting Disease Spread** is a machine learning project designed to predict disease cases and support early warning and monitoring of disease spread.
 
-The project includes a machine learning model, a FastAPI backend, and a frontend interface for making predictions.
+The system combines machine learning models with a **FastAPI backend** and a web-based frontend that allows users to enter disease-related information and receive a predicted number of cases.
 
 ## Problem Statement
 
-Disease outbreaks can spread rapidly and place pressure on healthcare systems. Predicting future disease cases can help provide early information that may support monitoring and decision-making.
+Disease outbreaks can spread rapidly and place significant pressure on healthcare systems. Having a system that can estimate disease cases from available data can provide useful information for monitoring disease trends and supporting early decision-making.
 
 ## Project Goal
 
-The goal of this project is to develop a machine learning system that predicts disease cases based on available disease-related and population data.
+The goal of this project is to develop and compare machine learning models for predicting disease cases using disease-related, population, testing, and time-based features.
+
+The project compares three different approaches:
+
+1. **Random Forest Regressor**
+2. **XGBoost Regressor**
+3. **Long Short-Term Memory (LSTM)**
 
 ## Dataset
 
-The project uses a COVID-19 dataset containing information such as:
+The project uses a COVID-19 dataset containing information including:
 
-- Country
-- Continent
-- Population
-- Cases
-- Recoveries
-- Deaths
-- Tests
-- Date-related information
+* Country
+* Continent
+* Population
+* Cases
+* Recoveries
+* Deaths
+* Tests
+* Year
+* Month
+* Day of Month
+* Hour
+
+The target variable for prediction is **Cases**.
 
 ## Machine Learning Models
 
-Three machine learning approaches were considered for this project:
+### 1. Random Forest Regressor
 
-1. **Random Forest Regressor** — an ensemble learning model that combines multiple decision trees.
-2. **XGBoost Regressor** — a gradient boosting model designed for strong predictive performance.
-3. **LSTM (Long Short-Term Memory)** — a deep learning model suitable for sequential and time-dependent data.
+Random Forest is an ensemble learning algorithm that combines multiple decision trees to produce predictions.
 
-The models are compared based on their predictive performance using evaluation metrics such as:
+### 2. XGBoost Regressor
 
-- Mean Absolute Error (MAE)
-- Mean Squared Error (MSE)
-- R² Score
+XGBoost is a gradient boosting algorithm that builds a sequence of decision trees to improve predictive performance.
+
+### 3. LSTM
+
+Long Short-Term Memory (LSTM) is a type of recurrent neural network designed to learn patterns in sequential and time-dependent data.
+
+## Model Evaluation
+
+The models were evaluated using:
+
+* Mean Absolute Error (MAE)
+* Mean Squared Error (MSE)
+* R² Score
+
+### Evaluation Results
+
+| Model         |          MAE |                    MSE |    R² Score |
+| ------------- | -----------: | ---------------------: | ----------: |
+| Random Forest | 1,925,660.01 |  45,792,209,828,091.09 |  **0.9276** |
+| XGBoost       | 2,785,785.75 | 122,602,559,373,312.00 |  **0.8063** |
+| LSTM          | 7,695,540.50 | 692,047,275,098,112.00 | **-0.0936** |
+
+Based on the evaluation results, **Random Forest Regressor achieved the best performance with an R² score of 0.9276** and is the model currently used by the FastAPI prediction API.
 
 ## Project Structure
 
 ```text
 ml-project/
+│
 ├── data/
-│   └── raw/
-│       └── data.csv
+│   ├── raw/
+│   │   └── data.csv
+│   ├── processed/
+│   │   └── processed_data.csv
+│   └── external/
+│
+├── front-end/
+│   └── index.html
+│
 ├── models/
+│   ├── continent_encoder.pkl
+│   ├── country_encoder.pkl
+│   ├── feature_columns.pkl
+│   ├── lstm_model.keras
+│   ├── scaler.pkl
 │   ├── trained_model.pkl
-│   └── feature_columns.pkl
+│   └── xgboost_model.pkl
+│
 ├── notebooks/
+│   ├── exploration.ipynb
+│   └── other project notebooks
+│
 ├── outputs/
+│   ├── predictions.csv
+│   ├── metrics.json
+│   ├── test_data.csv
+│   └── plots/
+│
 ├── src/
 │   ├── preprocess.py
 │   ├── feature_engineering.py
 │   ├── train.py
 │   ├── evaluate.py
 │   ├── predict.py
+│   ├── generate_predictions.py
 │   └── utils.py
-├── frondend/
-│   └── index.html
-├── main.py
+│
+├── .gitignore
 ├── config.py
+├── main.py
 ├── requirements.txt
 └── README.md
+```
 
 ## How to Run Locally
 
-### 1. Create and activate the virtual environment
+### 1. Create the virtual environment
 
 ```powershell
 py -3.13 -m venv .venv
-.venv\Scripts\activate
+```
 
-### 2. Install the required libraries
+### 2. Activate the virtual environment
+
+```powershell
+.venv\Scripts\activate
+```
+
+### 3. Install the required libraries
 
 ```powershell
 pip install -r requirements.txt
+```
 
-### 3. Start the FastAPI backend
+### 4. Start the FastAPI backend
 
 ```powershell
-uvicorn main:app --reload
+python -m uvicorn main:app --reload
+```
 
-The API will run at:
+The backend will run at:
 
+```text
 http://127.0.0.1:8000
+```
 
-### 4. Open the frontend
+### 5. Open the API documentation
 
-Open `frondend/index.html` using Live Server in VS Code.
+FastAPI provides interactive API documentation at:
 
-The frontend communicates with the FastAPI backend to make disease-case predictions.
+```text
+http://127.0.0.1:8000/docs
+```
 
-## API Endpoint
+The main prediction endpoint is:
 
-The prediction endpoint is:
+```text
+POST /predict
+```
 
-`POST /predict`
+### 6. Open the frontend
 
-The API returns the predicted number of disease cases.
+Open `front-end/index.html` using **Live Server** in VS Code.
 
-## Evaluation
+The local frontend is available at:
 
-The models are evaluated using:
+```text
+http://127.0.0.1:5500/front-end/index.html
+```
 
-- MAE
-- MSE
-- R² Score
+The frontend communicates with the FastAPI backend to send disease-related information and display the predicted number of cases.
+
+## Prediction Output
+
+After entering the required information, the system returns a predicted number of disease cases.
+
+Example:
+
+```text
+Predicted Cases: 3904.91
+```
+
+The frontend also displays:
+
+```text
+AI-Powered Disease Spread Prediction
+```
+
+## API Response
+
+The `/predict` endpoint returns the predicted number of cases in JSON format:
+
+```json
+{
+    "predicted_cases": 3904.91
+}
+```
+
+## Project Outputs
+
+The project generates the following outputs:
+
+* `outputs/predictions.csv` — contains actual and predicted case values.
+* `outputs/metrics.json` — contains the evaluation results for the three models.
+* `outputs/plots/` — contains project visualizations.
+* `outputs/test_data.csv` — contains the test data used for model evaluation.
+
+## Deployment
+
+The project is being prepared for public deployment so that users can access the disease spread prediction system through the internet.
+
+### Live Frontend
+
+*To be added after deployment.*
+
+### Live API
+
+*To be added after deployment.*
 
 ## Project Status
 
-The machine learning model, FastAPI backend, and frontend interface have been developed and connected for local testing.
+The following components have been completed and tested:
+
+* Dataset preparation
+* Exploratory data analysis
+* Data preprocessing
+* Feature engineering
+* Random Forest model
+* XGBoost model
+* LSTM model
+* Model evaluation
+* Prediction generation
+* FastAPI backend
+* Interactive API documentation
+* Frontend interface
+* Frontend-to-backend connection
+* Local prediction testing
+
+The next stage is deployment of the application and API for public access.
+
+## Disclaimer
+
+This project is intended for **educational and research purposes**. Predictions generated by the system should not be considered a substitute for professional medical advice, diagnosis, or public-health decision-making.
